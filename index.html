@@ -54,11 +54,19 @@
         #video-area {
             position: relative;
             width: 100%;
+            height: 80vh;
             background-color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        video {
+        #remote-video {
             width: 100%;
+            height: 100%;
+            background: url("https://via.placeholder.com/300x500") no-repeat center center;
+            background-size: cover;
             border-radius: 8px;
         }
 
@@ -67,8 +75,11 @@
             bottom: 10px;
             right: 10px;
             width: 30%;
+            height: auto;
             border: 2px solid #fff;
             border-radius: 5px;
+            background: url("https://via.placeholder.com/100") no-repeat center center;
+            background-size: cover;
         }
 
         .controls {
@@ -79,9 +90,14 @@
 
         .controls button {
             width: 24%;
+            transition: background-color 0.3s;
         }
 
-        /* Стили для экранов идентификации, выбора контактов и подтверждения */
+        .controls button.off {
+            background-color: red;
+            color: white;
+        }
+
         #contacts-list {
             display: flex;
             justify-content: space-around;
@@ -92,6 +108,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            overflow: hidden;
             background-color: #eaeaea;
             display: flex;
             align-items: center;
@@ -114,6 +131,7 @@
             <input type="text" id="device-id" placeholder="Device ID" style="width: 100%; padding: 10px; margin: 10px 0;">
             <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0;">
             <button onclick="goToContacts()">Login</button>
+            <p id="error-message" style="color: red; display: none;">Please enter a password</p>
         </div>
 
         <!-- Второй экран: Список контактов -->
@@ -121,19 +139,19 @@
             <h1>Select Contact</h1>
             <div id="contacts-list">
                 <div class="contact" onclick="confirmCall('Alice')">
-                    <img src="https://via.placeholder.com/60" alt="Alice">
+                    <img src="https://via.placeholder.com/60/FFB6C1" alt="Alice">
                 </div>
                 <div class="contact" onclick="confirmCall('Bob')">
-                    <img src="https://via.placeholder.com/60" alt="Bob">
+                    <img src="https://via.placeholder.com/60/87CEEB" alt="Bob">
                 </div>
                 <div class="contact" onclick="confirmCall('Charlie')">
-                    <img src="https://via.placeholder.com/60" alt="Charlie">
+                    <img src="https://via.placeholder.com/60/90EE90" alt="Charlie">
                 </div>
                 <div class="contact" onclick="confirmCall('Dave')">
-                    <img src="https://via.placeholder.com/60" alt="Dave">
+                    <img src="https://via.placeholder.com/60/FF69B4" alt="Dave">
                 </div>
                 <div class="contact" onclick="confirmCall('Eve')">
-                    <img src="https://via.placeholder.com/60" alt="Eve">
+                    <img src="https://via.placeholder.com/60/ADD8E6" alt="Eve">
                 </div>
             </div>
         </div>
@@ -153,16 +171,22 @@
                 <video id="local-video" autoplay muted></video>
             </div>
             <div class="controls">
-                <button onclick="endCall()">End Call</button>
-                <button onclick="toggleDevice()">Toggle Device</button>
-                <button onclick="toggleMicrophone()">Toggle Microphone</button>
-                <button onclick="toggleCamera()">Toggle Camera</button>
+                <button id="end-call" onclick="endCall()">End Call</button>
+                <button id="toggle-device" onclick="toggleDevice()">Device</button>
+                <button id="toggle-mic" onclick="toggleMicrophone()">Mic</button>
+                <button id="toggle-camera" onclick="toggleCamera()">Cam</button>
             </div>
         </div>
     </div>
 
     <script>
         function goToContacts() {
+            const password = document.getElementById("password").value;
+            if (!password) {
+                document.getElementById("error-message").style.display = "block";
+                return;
+            }
+            document.getElementById("error-message").style.display = "none";
             document.getElementById("login-screen").classList.remove("active");
             document.getElementById("contacts-screen").classList.add("active");
         }
@@ -170,34 +194,32 @@
         function confirmCall(contactName) {
             document.getElementById("contacts-screen").classList.remove("active");
             document.getElementById("confirm-screen").classList.add("active");
-            console.log("Selected contact:", contactName);  // В реальном приложении можно сохранить контакт для звонка
+            console.log("Selected contact:", contactName);
         }
 
         function startCall() {
             document.getElementById("confirm-screen").classList.remove("active");
             document.getElementById("call-screen").classList.add("active");
-            // Подключение к WebRTC для начала звонка
         }
 
         function endCall() {
             document.getElementById("call-screen").classList.remove("active");
             document.getElementById("login-screen").classList.add("active");
-            // Завершение звонка WebRTC
         }
 
         function toggleDevice() {
-            console.log("Toggle device for touch sharing");
-            // Код для включения/выключения устройства для передачи касаний
+            const button = document.getElementById("toggle-device");
+            button.classList.toggle("off");
         }
 
         function toggleMicrophone() {
-            console.log("Toggle microphone");
-            // Код для включения/выключения микрофона
+            const button = document.getElementById("toggle-mic");
+            button.classList.toggle("off");
         }
 
         function toggleCamera() {
-            console.log("Toggle camera");
-            // Код для включения/выключения камеры
+            const button = document.getElementById("toggle-camera");
+            button.classList.toggle("off");
         }
     </script>
 </body>
