@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Call with Touch Sharing</title>
+    <title>Стильный Видео-звонок</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,13 +12,12 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
         }
 
         #app {
@@ -36,19 +35,67 @@
             display: block;
         }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            margin: 10px 0;
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input, button {
             width: 100%;
-            border-radius: 5px;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
+            color: white;
             cursor: pointer;
+            transition: background 0.3s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
+        }
+
+        #contacts-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact {
+            width: 90px;
+            text-align: center;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .contact img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .contact img:hover {
+            transform: scale(1.1);
+        }
+
+        .contact-name {
+            margin-top: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         #video-area {
@@ -74,7 +121,7 @@
             position: absolute;
             bottom: 10px;
             right: 10px;
-            width: 30%;
+            width: 25%;
             height: auto;
             border: 2px solid #fff;
             border-radius: 5px;
@@ -90,91 +137,77 @@
 
         .controls button {
             width: 24%;
-            transition: background-color 0.3s;
+            background-color: #6b5b95;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
         }
 
         .controls button.off {
             background-color: red;
-            color: white;
-        }
-
-        #contacts-list {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .contact {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: #eaeaea;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .contact img {
-            width: 100%;
-            border-radius: 50%;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Первый экран: Ввод идентификатора и пароля -->
+        <!-- Экран входа -->
         <div id="login-screen" class="screen active">
-            <h1>Login</h1>
-            <input type="text" id="device-id" placeholder="Device ID" style="width: 100%; padding: 10px; margin: 10px 0;">
-            <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0;">
-            <button onclick="goToContacts()">Login</button>
-            <p id="error-message" style="color: red; display: none;">Please enter a password</p>
+            <h1>Вход</h1>
+            <input type="text" id="device-id" placeholder="ID устройства">
+            <input type="password" id="password" placeholder="Пароль">
+            <button onclick="goToContacts()">Войти</button>
+            <p id="error-message" style="color: red; display: none;">Пожалуйста, введите пароль</p>
         </div>
 
-        <!-- Второй экран: Список контактов -->
+        <!-- Экран выбора контактов -->
         <div id="contacts-screen" class="screen">
-            <h1>Select Contact</h1>
+            <h1>Выберите контакт</h1>
             <div id="contacts-list">
-                <div class="contact" onclick="confirmCall('Alice')">
-                    <img src="https://via.placeholder.com/60/FFB6C1" alt="Alice">
+                <div class="contact" onclick="confirmCall('Катя')">
+                    <img src="https://via.placeholder.com/90/FFB6C1" alt="Катя">
+                    <div class="contact-name">Катя</div>
                 </div>
-                <div class="contact" onclick="confirmCall('Bob')">
-                    <img src="https://via.placeholder.com/60/87CEEB" alt="Bob">
+                <div class="contact" onclick="confirmCall('Максим')">
+                    <img src="https://via.placeholder.com/90/87CEEB" alt="Максим">
+                    <div class="contact-name">Максим</div>
                 </div>
-                <div class="contact" onclick="confirmCall('Charlie')">
-                    <img src="https://via.placeholder.com/60/90EE90" alt="Charlie">
+                <div class="contact" onclick="confirmCall('Анна')">
+                    <img src="https://via.placeholder.com/90/90EE90" alt="Анна">
+                    <div class="contact-name">Анна</div>
                 </div>
-                <div class="contact" onclick="confirmCall('Dave')">
-                    <img src="https://via.placeholder.com/60/FF69B4" alt="Dave">
+                <div class="contact" onclick="confirmCall('Игорь')">
+                    <img src="https://via.placeholder.com/90/FF69B4" alt="Игорь">
+                    <div class="contact-name">Игорь</div>
                 </div>
-                <div class="contact" onclick="confirmCall('Eve')">
-                    <img src="https://via.placeholder.com/60/ADD8E6" alt="Eve">
+                <div class="contact" onclick="confirmCall('Ольга')">
+                    <img src="https://via.placeholder.com/90/ADD8E6" alt="Ольга">
+                    <div class="contact-name">Ольга</div>
                 </div>
             </div>
         </div>
 
-        <!-- Третий экран: Подтверждение начала звонка -->
+        <!-- Экран подтверждения вызова -->
         <div id="confirm-screen" class="screen">
-            <h1>Confirm Call</h1>
-            <p>Do you want to use the device for touch sharing?</p>
-            <button onclick="startCall()">Yes</button>
-            <button onclick="goToContacts()">No</button>
+            <h1>Подтвердите вызов</h1>
+            <p>Хотите ли вы использовать устройство для передачи касаний?</p>
+            <button onclick="startCall()">Да</button>
+            <button onclick="goToContacts()">Нет</button>
         </div>
 
-        <!-- Четвертый экран: Звонок -->
+        <!-- Экран звонка -->
         <div id="call-screen" class="screen">
             <div id="video-area">
                 <video id="remote-video" autoplay></video>
                 <video id="local-video" autoplay muted></video>
             </div>
             <div class="controls">
-                <button id="end-call" onclick="endCall()">End Call</button>
-                <button id="toggle-device" onclick="toggleDevice()">Device</button>
-                <button id="toggle-mic" onclick="toggleMicrophone()">Mic</button>
-                <button id="toggle-camera" onclick="toggleCamera()">Cam</button>
+                <button id="end-call" onclick="endCall()">Завершить</button>
+                <button id="toggle-device" onclick="toggleDevice()">Устройство</button>
+                <button id="toggle-mic" onclick="toggleMicrophone()">Микрофон</button>
+                <button id="toggle-camera" onclick="toggleCamera()">Камера</button>
             </div>
         </div>
     </div>
@@ -194,7 +227,7 @@
         function confirmCall(contactName) {
             document.getElementById("contacts-screen").classList.remove("active");
             document.getElementById("confirm-screen").classList.add("active");
-            console.log("Selected contact:", contactName);
+            console.log("Выбранный контакт:", contactName);
         }
 
         function startCall() {
