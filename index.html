@@ -40,7 +40,7 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 10px;
             margin: 10px 0;
             width: 100%;
             border-radius: 5px;
@@ -62,26 +62,13 @@
             border-radius: 8px;
         }
 
-        #touch-area {
-            width: 100%;
-            height: 300px;
-            background-color: #eaeaea;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #touch-area .touch-indicator {
+        #local-video {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: rgba(0, 0, 255, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
+            bottom: 10px;
+            right: 10px;
+            width: 30%;
+            border: 2px solid #fff;
+            border-radius: 5px;
         }
 
         .controls {
@@ -91,75 +78,126 @@
         }
 
         .controls button {
-            width: 30%;
+            width: 24%;
+        }
+
+        /* Стили для экранов идентификации, выбора контактов и подтверждения */
+        #contacts-list {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .contact {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #eaeaea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .contact img {
+            width: 100%;
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Главный экран -->
-        <div id="home-screen" class="screen active">
-            <h1>Video Call App</h1>
-            <button onclick="startCall()">Start Call</button>
+        <!-- Первый экран: Ввод идентификатора и пароля -->
+        <div id="login-screen" class="screen active">
+            <h1>Login</h1>
+            <input type="text" id="device-id" placeholder="Device ID" style="width: 100%; padding: 10px; margin: 10px 0;">
+            <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; margin: 10px 0;">
+            <button onclick="goToContacts()">Login</button>
         </div>
 
-        <!-- Экран звонка -->
-        <div id="call-screen" class="screen hidden">
+        <!-- Второй экран: Список контактов -->
+        <div id="contacts-screen" class="screen">
+            <h1>Select Contact</h1>
+            <div id="contacts-list">
+                <div class="contact" onclick="confirmCall('Alice')">
+                    <img src="https://via.placeholder.com/60" alt="Alice">
+                </div>
+                <div class="contact" onclick="confirmCall('Bob')">
+                    <img src="https://via.placeholder.com/60" alt="Bob">
+                </div>
+                <div class="contact" onclick="confirmCall('Charlie')">
+                    <img src="https://via.placeholder.com/60" alt="Charlie">
+                </div>
+                <div class="contact" onclick="confirmCall('Dave')">
+                    <img src="https://via.placeholder.com/60" alt="Dave">
+                </div>
+                <div class="contact" onclick="confirmCall('Eve')">
+                    <img src="https://via.placeholder.com/60" alt="Eve">
+                </div>
+            </div>
+        </div>
+
+        <!-- Третий экран: Подтверждение начала звонка -->
+        <div id="confirm-screen" class="screen">
+            <h1>Confirm Call</h1>
+            <p>Do you want to use the device for touch sharing?</p>
+            <button onclick="startCall()">Yes</button>
+            <button onclick="goToContacts()">No</button>
+        </div>
+
+        <!-- Четвертый экран: Звонок -->
+        <div id="call-screen" class="screen">
             <div id="video-area">
                 <video id="remote-video" autoplay></video>
                 <video id="local-video" autoplay muted></video>
             </div>
-            <div id="touch-area" onclick="sendTouch(event)">
-                <p>Tap to send touch</p>
-            </div>
             <div class="controls">
                 <button onclick="endCall()">End Call</button>
-                <button onclick="toggleVideo()">Toggle Video</button>
-                <button onclick="toggleAudio()">Toggle Audio</button>
+                <button onclick="toggleDevice()">Toggle Device</button>
+                <button onclick="toggleMicrophone()">Toggle Microphone</button>
+                <button onclick="toggleCamera()">Toggle Camera</button>
             </div>
         </div>
     </div>
 
     <script>
+        function goToContacts() {
+            document.getElementById("login-screen").classList.remove("active");
+            document.getElementById("contacts-screen").classList.add("active");
+        }
+
+        function confirmCall(contactName) {
+            document.getElementById("contacts-screen").classList.remove("active");
+            document.getElementById("confirm-screen").classList.add("active");
+            console.log("Selected contact:", contactName);  // В реальном приложении можно сохранить контакт для звонка
+        }
+
         function startCall() {
-            document.getElementById("home-screen").classList.remove("active");
+            document.getElementById("confirm-screen").classList.remove("active");
             document.getElementById("call-screen").classList.add("active");
-            // Здесь будет подключение к WebRTC для видео-звонка
+            // Подключение к WebRTC для начала звонка
         }
 
         function endCall() {
-            document.getElementById("home-screen").classList.add("active");
             document.getElementById("call-screen").classList.remove("active");
-            // Завершить звонок WebRTC
+            document.getElementById("login-screen").classList.add("active");
+            // Завершение звонка WebRTC
         }
 
-        function toggleVideo() {
-            const video = document.getElementById("local-video");
-            if (video.srcObject) {
-                video.srcObject.getVideoTracks()[0].enabled = !video.srcObject.getVideoTracks()[0].enabled;
-            }
+        function toggleDevice() {
+            console.log("Toggle device for touch sharing");
+            // Код для включения/выключения устройства для передачи касаний
         }
 
-        function toggleAudio() {
-            const video = document.getElementById("local-video");
-            if (video.srcObject) {
-                video.srcObject.getAudioTracks()[0].enabled = !video.srcObject.getAudioTracks()[0].enabled;
-            }
+        function toggleMicrophone() {
+            console.log("Toggle microphone");
+            // Код для включения/выключения микрофона
         }
 
-        function sendTouch(event) {
-            const touchArea = document.getElementById("touch-area");
-            const indicator = document.createElement("div");
-            indicator.classList.add("touch-indicator");
-            indicator.style.left = `${event.clientX - 15}px`;
-            indicator.style.top = `${event.clientY - 15}px`;
-            touchArea.appendChild(indicator);
-
-            setTimeout(() => {
-                touchArea.removeChild(indicator);
-            }, 500);
-
-            // Отправка данных касания через WebSocket/WebRTC
+        function toggleCamera() {
+            console.log("Toggle camera");
+            // Код для включения/выключения камеры
         }
     </script>
 </body>
