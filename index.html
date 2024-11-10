@@ -18,6 +18,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden; /* Отключаем прокрутку */
         }
 
         #app {
@@ -129,6 +130,10 @@
             background-size: cover;
         }
 
+        #local-video.off {
+            background-color: black; /* Черный экран, когда камера отключена */
+        }
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -155,6 +160,33 @@
         .control-button.off {
             background-color: red;
         }
+
+        /* Мобильная адаптация */
+        @media (max-width: 500px) {
+            #app {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .contact {
+                width: 70px;
+            }
+
+            #video-area {
+                height: 70vh;
+            }
+
+            .control-button {
+                width: 50px;
+                height: 50px;
+            }
+
+            .control-button img {
+                width: 25px;
+                height: 25px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -165,7 +197,7 @@
             <input type="text" id="device-id" placeholder="ID устройства">
             <input type="password" id="password" placeholder="Пароль">
             <button onclick="goToContacts()">Войти</button>
-            <p id="error-message" style="color: red; display: none;">Пожалуйста, введите пароль</p>
+            <p id="error-message" style="color: red; display: none;">Пожалуйста, введите логин и пароль</p>
         </div>
 
         <!-- Экран выбора контактов -->
@@ -228,20 +260,23 @@
 
     <script>
         function goToContacts() {
+            const deviceId = document.getElementById("device-id").value;
             const password = document.getElementById("password").value;
-            if (!password) {
+
+            if (!deviceId || !password) {
                 document.getElementById("error-message").style.display = "block";
                 return;
             }
+
             document.getElementById("error-message").style.display = "none";
             document.getElementById("login-screen").classList.remove("active");
             document.getElementById("contacts-screen").classList.add("active");
         }
 
-        function confirmCall(contactName) {
+        function confirmCall(contact) {
+            // Просто пример для контакта
             document.getElementById("contacts-screen").classList.remove("active");
             document.getElementById("confirm-screen").classList.add("active");
-            console.log("Выбранный контакт:", contactName);
         }
 
         function startCall(useDevice) {
@@ -253,13 +288,12 @@
             }
         }
 
-        function endCall() {
-            document.getElementById("call-screen").classList.remove("active");
-            document.getElementById("login-screen").classList.add("active");
-        }
-
         function toggleButton(button) {
             button.classList.toggle("off");
+        }
+
+        function endCall() {
+            alert("Звонок завершен");
         }
     </script>
 </body>
