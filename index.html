@@ -199,8 +199,8 @@
         <div id="confirm-screen" class="screen">
             <h1>Подтвердите вызов</h1>
             <p>Хотите ли вы использовать устройство для передачи касаний?</p>
-            <button onclick="startCall()">Да</button>
-            <button onclick="goToContacts()">Нет</button>
+            <button onclick="startCall(true)">Да</button>
+            <button onclick="startCall(false)">Нет</button>
         </div>
 
         <!-- Экран звонка -->
@@ -214,7 +214,7 @@
                     <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
                 </div>
                 <div class="control-button" id="toggle-device" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/touchscreen.png" alt="Device">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Device">
                 </div>
                 <div class="control-button" id="toggle-mic" onclick="toggleButton(this)">
                     <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Mic">
@@ -244,9 +244,13 @@
             console.log("Выбранный контакт:", contactName);
         }
 
-        function startCall() {
+        function startCall(useDevice) {
             document.getElementById("confirm-screen").classList.remove("active");
             document.getElementById("call-screen").classList.add("active");
+
+            if (!useDevice) {
+                document.getElementById("toggle-device").classList.add("off");
+            }
         }
 
         function endCall() {
