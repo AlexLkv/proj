@@ -97,6 +97,10 @@
             color: #555;
             font-weight: bold;
             font-size: 14px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         #video-area {
@@ -274,7 +278,6 @@
         }
 
         function confirmCall(contact) {
-            // Просто пример для контакта
             document.getElementById("contacts-screen").classList.remove("active");
             document.getElementById("confirm-screen").classList.add("active");
         }
@@ -294,6 +297,8 @@
 
         function endCall() {
             alert("Звонок завершен");
+            document.getElementById("call-screen").classList.remove("active");
+            document.getElementById("contacts-screen").classList.add("active");
         }
     </script>
 </body>
