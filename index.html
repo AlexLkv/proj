@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call with Touch Sharing</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #video-area {
+            position: relative;
+            width: 100%;
+            background-color: black;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        #touch-area {
+            width: 100%;
+            height: 300px;
+            background-color: #eaeaea;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #touch-area .touch-indicator {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 0, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Главный экран -->
+        <div id="home-screen" class="screen active">
+            <h1>Video Call App</h1>
+            <button onclick="startCall()">Start Call</button>
+        </div>
+
+        <!-- Экран звонка -->
+        <div id="call-screen" class="screen hidden">
+            <div id="video-area">
+                <video id="remote-video" autoplay></video>
+                <video id="local-video" autoplay muted></video>
+            </div>
+            <div id="touch-area" onclick="sendTouch(event)">
+                <p>Tap to send touch</p>
+            </div>
+            <div class="controls">
+                <button onclick="endCall()">End Call</button>
+                <button onclick="toggleVideo()">Toggle Video</button>
+                <button onclick="toggleAudio()">Toggle Audio</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startCall() {
+            document.getElementById("home-screen").classList.remove("active");
+            document.getElementById("call-screen").classList.add("active");
+            // Здесь будет подключение к WebRTC для видео-звонка
+        }
+
+        function endCall() {
+            document.getElementById("home-screen").classList.add("active");
+            document.getElementById("call-screen").classList.remove("active");
+            // Завершить звонок WebRTC
+        }
+
+        function toggleVideo() {
+            const video = document.getElementById("local-video");
+            if (video.srcObject) {
+                video.srcObject.getVideoTracks()[0].enabled = !video.srcObject.getVideoTracks()[0].enabled;
+            }
+        }
+
+        function toggleAudio() {
+            const video = document.getElementById("local-video");
+            if (video.srcObject) {
+                video.srcObject.getAudioTracks()[0].enabled = !video.srcObject.getAudioTracks()[0].enabled;
+            }
+        }
+
+        function sendTouch(event) {
+            const touchArea = document.getElementById("touch-area");
+            const indicator = document.createElement("div");
+            indicator.classList.add("touch-indicator");
+            indicator.style.left = `${event.clientX - 15}px`;
+            indicator.style.top = `${event.clientY - 15}px`;
+            touchArea.appendChild(indicator);
+
+            setTimeout(() => {
+                touchArea.removeChild(indicator);
+            }, 500);
+
+            // Отправка данных касания через WebSocket/WebRTC
+        }
+    </script>
+</body>
+</html>
