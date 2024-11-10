@@ -18,7 +18,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            overflow: hidden; /* Отключаем прокрутку */
+            overflow: hidden;
         }
 
         #app {
@@ -41,62 +41,47 @@
             margin-bottom: 20px;
         }
 
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-        }
-
-        input {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-        }
-
-        button {
-            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
-        }
-
-        #contacts-list {
+        .contact-wheel {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 5px solid #6b5b95;
+            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            margin-top: 20px;
-            overflow-y: auto;
-            height: 60vh;
+            align-items: center;
+        }
+
+        .contact-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transform: rotate(0deg);
+            transition: transform 1s ease;
         }
 
         .contact {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+            width: 70px;
+            height: 70px;
             background-color: #6b5b95;
             display: flex;
-            align-items: center;
             justify-content: center;
-            margin: 15px;
+            align-items: center;
+            border-radius: 50%;
+            margin: 0;
             cursor: pointer;
             transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .contact:hover {
-            transform: scale(1.2);
         }
 
         .contact img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
         }
 
@@ -108,66 +93,41 @@
             font-size: 14px;
         }
 
-        #video-area {
-            position: relative;
-            width: 100%;
-            height: 80vh;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .button-container {
+            margin-top: 20px;
         }
 
-        #remote-video {
-            width: 100%;
-            height: 100%;
-            background: url("https://via.placeholder.com/300x500") no-repeat center center;
-            background-size: cover;
+        button {
+            padding: 12px;
+            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
+            color: white;
+            cursor: pointer;
             border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            transition: background 0.3s;
         }
 
-        #local-video {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 25%;
-            height: auto;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            background: url("https://via.placeholder.com/100") no-repeat center center;
-            background-size: cover;
+        button:hover {
+            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
         }
 
-        #local-video.off {
-            background-color: black; /* Черный экран, когда камера отключена */
-        }
-
-        .controls {
+        .rotation-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
         }
 
-        .control-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+        .rotate-button {
             background-color: #6b5b95;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
             cursor: pointer;
         }
 
-        .control-button img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .control-button.off {
-            background-color: red;
+        .rotate-button:hover {
+            background-color: #5a4b85;
         }
 
         /* Мобильная адаптация */
@@ -178,78 +138,37 @@
                 padding: 10px;
             }
 
-            .contact {
-                width: 70px;
-                height: 70px;
+            .contact-wheel {
+                width: 200px;
+                height: 200px;
             }
 
             .contact-name {
                 font-size: 12px;
             }
 
-            #video-area {
-                height: 70vh;
-            }
-
-            .control-button {
-                width: 50px;
-                height: 50px;
-            }
-
-            .control-button img {
-                width: 25px;
-                height: 25px;
+            button {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Экран входа -->
-        <div id="login-screen" class="screen active">
-            <h1>Вход</h1>
-            <input type="text" id="device-id" placeholder="ID устройства">
-            <input type="password" id="password" placeholder="Пароль">
-            <button onclick="goToContacts()">Войти</button>
-            <p id="error-message" style="color: red; display: none;">Пожалуйста, введите логин и пароль</p>
-        </div>
-
         <!-- Экран выбора контактов -->
-        <div id="contacts-screen" class="screen">
+        <div id="contacts-screen" class="screen active">
             <h1>Выберите контакт</h1>
-            <div id="contacts-list">
-                <div class="contact" onclick="confirmCall('Катя')">
-                    <img src="https://via.placeholder.com/70/FFB6C1" alt="Катя">
-                    <div class="contact-name">Катя</div>
+            <div class="contact-wheel">
+                <div class="contact-container" id="contact-container">
+                    <!-- Контакты будут добавлены сюда динамически -->
                 </div>
-                <div class="contact" onclick="confirmCall('Максим')">
-                    <img src="https://via.placeholder.com/70/87CEEB" alt="Максим">
-                    <div class="contact-name">Максим</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Анна')">
-                    <img src="https://via.placeholder.com/70/90EE90" alt="Анна">
-                    <div class="contact-name">Анна</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Игорь')">
-                    <img src="https://via.placeholder.com/70/FF69B4" alt="Игорь">
-                    <div class="contact-name">Игорь</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Ольга')">
-                    <img src="https://via.placeholder.com/70/ADD8E6" alt="Ольга">
-                    <div class="contact-name">Ольга</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Дмитрий')">
-                    <img src="https://via.placeholder.com/70/FFD700" alt="Дмитрий">
-                    <div class="contact-name">Дмитрий</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Марина')">
-                    <img src="https://via.placeholder.com/70/DAA520" alt="Марина">
-                    <div class="contact-name">Марина</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Алексей')">
-                    <img src="https://via.placeholder.com/70/DC143C" alt="Алексей">
-                    <div class="contact-name">Алексей</div>
-                </div>
+            </div>
+            <div class="rotation-buttons">
+                <div class="rotate-button" onclick="rotateWheel('left')">←</div>
+                <div class="rotate-button" onclick="rotateWheel('right')">→</div>
+            </div>
+            <div class="button-container">
+                <button onclick="confirmCall()">Подтвердить выбор</button>
             </div>
         </div>
 
@@ -263,64 +182,80 @@
 
         <!-- Экран звонка -->
         <div id="call-screen" class="screen">
-            <div id="video-area">
-                <video id="remote-video" autoplay></video>
-                <video id="local-video" autoplay muted></video>
-            </div>
-            <div class="controls">
-                <div class="control-button" id="end-call" onclick="endCall()">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
-                </div>
-                <div class="control-button" id="toggle-device" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Device">
-                </div>
-                <div class="control-button off" id="toggle-mic" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Microphone">
-                </div>
-                <div class="control-button off" id="toggle-camera" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-camera.png" alt="Camera">
-                </div>
-            </div>
+            <h1>Звонок с <span id="contact-name"></span></h1>
+            <!-- Видео экраны -->
         </div>
     </div>
 
     <script>
-        function goToContacts() {
-            var deviceId = document.getElementById("device-id").value;
-            var password = document.getElementById("password").value;
+        const contacts = [
+            { name: 'Катя', img: 'https://via.placeholder.com/70/FFB6C1' },
+            { name: 'Максим', img: 'https://via.placeholder.com/70/87CEEB' },
+            { name: 'Анна', img: 'https://via.placeholder.com/70/90EE90' },
+            { name: 'Игорь', img: 'https://via.placeholder.com/70/FF69B4' },
+            { name: 'Ольга', img: 'https://via.placeholder.com/70/ADD8E6' },
+            { name: 'Дмитрий', img: 'https://via.placeholder.com/70/FFD700' },
+            { name: 'Марина', img: 'https://via.placeholder.com/70/DAA520' },
+            { name: 'Алексей', img: 'https://via.placeholder.com/70/DC143C' },
+        ];
 
-            if (deviceId && password) {
-                document.getElementById("login-screen").classList.remove("active");
-                document.getElementById("contacts-screen").classList.add("active");
-                document.getElementById("error-message").style.display = "none";
-            } else {
-                document.getElementById("error-message").style.display = "block";
-            }
+        let currentIndex = 0;
+
+        // Функция для отображения контактов
+        function displayContacts() {
+            const container = document.getElementById('contact-container');
+            container.innerHTML = ''; // очищаем контейнер
+
+            contacts.forEach((contact, index) => {
+                const contactElement = document.createElement('div');
+                contactElement.classList.add('contact');
+                contactElement.setAttribute('data-index', index);
+
+                const img = document.createElement('img');
+                img.src = contact.img;
+                contactElement.appendChild(img);
+
+                const name = document.createElement('div');
+                name.classList.add('contact-name');
+                name.textContent = contact.name;
+                contactElement.appendChild(name);
+
+                container.appendChild(contactElement);
+            });
+
+            // Устанавливаем правильное вращение
+            rotateWheel('reset');
         }
 
-        function confirmCall(contact) {
+        // Функция вращения колеса
+        function rotateWheel(direction) {
+            const container = document.getElementById('contact-container');
+            const rotationAngle = direction === 'left' ? 45 : direction === 'right' ? -45 : 0;
+
+            container.style.transform = `rotate(${currentIndex * 45 + rotationAngle}deg)`;
+            currentIndex = (currentIndex + (direction === 'left' ? -1 : direction === 'right' ? 1 : 0) + contacts.length) % contacts.length;
+        }
+
+        // Функция подтверждения выбора
+        function confirmCall() {
+            const selectedContact = contacts[currentIndex];
+            document.getElementById("contact-name").textContent = selectedContact.name;
             document.getElementById("contacts-screen").classList.remove("active");
             document.getElementById("confirm-screen").classList.add("active");
         }
 
+        // Функция начала звонка
         function startCall(useDevice) {
             document.getElementById("confirm-screen").classList.remove("active");
             document.getElementById("call-screen").classList.add("active");
 
             if (!useDevice) {
-                document.getElementById("toggle-device").classList.add("off");
+                alert("Вы выбрали не использовать устройство для передачи касаний.");
             }
         }
 
-        function toggleButton(button) {
-            button.classList.toggle("off");
-        }
-
-        function endCall() {
-            alert("Звонок завершен");
-            document.getElementById("call-screen").classList.remove("active");
-            document.getElementById("contacts-screen").classList.add("active");
-        }
+        // Инициализация
+        displayContacts();
     </script>
 </body>
 </html>
