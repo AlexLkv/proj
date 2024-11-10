@@ -135,18 +135,24 @@
             margin-top: 20px;
         }
 
-        .controls button {
-            width: 24%;
+        .control-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             background-color: #6b5b95;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
             cursor: pointer;
-            transition: background 0.3s, color 0.3s;
         }
 
-        .controls button.off {
+        .control-button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .control-button.off {
             background-color: red;
         }
     </style>
@@ -204,10 +210,18 @@
                 <video id="local-video" autoplay muted></video>
             </div>
             <div class="controls">
-                <button id="end-call" onclick="endCall()">Завершить</button>
-                <button id="toggle-device" onclick="toggleDevice()">Устройство</button>
-                <button id="toggle-mic" onclick="toggleMicrophone()">Микрофон</button>
-                <button id="toggle-camera" onclick="toggleCamera()">Камера</button>
+                <div class="control-button" id="end-call" onclick="endCall()">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
+                </div>
+                <div class="control-button" id="toggle-device" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/touchscreen.png" alt="Device">
+                </div>
+                <div class="control-button" id="toggle-mic" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Mic">
+                </div>
+                <div class="control-button" id="toggle-camera" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-call.png" alt="Cam">
+                </div>
             </div>
         </div>
     </div>
@@ -240,18 +254,7 @@
             document.getElementById("login-screen").classList.add("active");
         }
 
-        function toggleDevice() {
-            const button = document.getElementById("toggle-device");
-            button.classList.toggle("off");
-        }
-
-        function toggleMicrophone() {
-            const button = document.getElementById("toggle-mic");
-            button.classList.toggle("off");
-        }
-
-        function toggleCamera() {
-            const button = document.getElementById("toggle-camera");
+        function toggleButton(button) {
             button.classList.toggle("off");
         }
     </script>
