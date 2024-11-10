@@ -78,6 +78,7 @@
             text-align: center;
             margin: 10px;
             cursor: pointer;
+            position: relative; /* Чтобы имена не выходили за пределы */
         }
 
         .contact img {
@@ -97,10 +98,8 @@
             color: #555;
             font-weight: bold;
             font-size: 14px;
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
+            top: 10px; /* Устанавливаем позицию имени ниже картинки */
         }
 
         #video-area {
