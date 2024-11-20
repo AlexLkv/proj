@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Стирая расстояние</title>
+    <title>Авторизация</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,11 +18,12 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
         }
 
         #app {
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             text-align: center;
         }
 
@@ -65,201 +66,94 @@
             background: linear-gradient(45deg, #5a4b85, #a8a0b9);
         }
 
-        #contacts-list {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .contact {
-            width: 90px;
-            text-align: center;
-            margin: 10px;
-            cursor: pointer;
-        }
-
-        .contact img {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-
-        .contact img:hover {
-            transform: scale(1.1);
-        }
-
-        .contact-name {
-            margin-top: 8px;
-            color: #555;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        #video-area {
-            position: relative;
-            width: 100%;
-            height: 80vh;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #remote-video {
-            width: 100%;
-            height: 100%;
-            background: url("https://i.pinimg.com/originals/32/ed/35/32ed3509b87929d737bac6a91e1562a0.jpg") no-repeat center center;
-            background-size: cover;
-            border-radius: 8px;
-        }
-
-        #local-video {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 25%;
-            height: auto;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            background: url("https://dszn.ru/uploads/cache/event/e4b125fb-1597060515.jpg/b99f54f1fee275a71c62e8666c379f5f") no-repeat center center;
-            background-size: cover;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .control-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #6b5b95;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-
-        .control-button img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .control-button.off {
-            background-color: red;
+        #error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div id="app">
+        <!-- Первый экран -->
+        <div id="question-screen" class="screen active">
+            <h1>У вас уже есть аккаунт?</h1>
+            <button onclick="goToLogin()">Да, войти</button>
+            <button onclick="goToRegister()">Нет, зарегистрироваться</button>
+        </div>
+
         <!-- Экран входа -->
-        <div id="login-screen" class="screen active">
+        <div id="login-screen" class="screen">
             <h1>Вход</h1>
-            <input type="text" id="device-id" placeholder="ID устройства">
-            <input type="password" id="password" placeholder="Пароль">
-            <button onclick="goToContacts()">Войти</button>
-            <p id="error-message" style="color: red; display: none;">Пожалуйста, введите пароль</p>
+            <input type="text" id="login-email" placeholder="Email">
+            <input type="password" id="login-password" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+            <p id="login-error" style="color: red; display: none;">Введите корректные данные</p>
         </div>
 
-        <!-- Экран выбора контактов -->
+        <!-- Экран регистрации -->
+        <div id="register-screen" class="screen">
+            <h1>Регистрация</h1>
+            <input type="text" id="register-email" placeholder="Email">
+            <input type="password" id="register-password" placeholder="Пароль">
+            <input type="password" id="confirm-password" placeholder="Повторите пароль">
+            <button onclick="register()">Зарегистрироваться</button>
+            <p id="register-error" style="color: red; display: none;">Поля пароля не совпадают или пусты</p>
+        </div>
+
+        <!-- Экран контактов -->
         <div id="contacts-screen" class="screen">
-            <h1>Выберите контакт</h1>
-            <div id="contacts-list">
-                <div class="contact" onclick="confirmCall('Катя')">
-                    <img src="https://i.pinimg.com/originals/d4/8d/b3/d48db3583d070734f1c62bb42d38df23.jpg" alt="Катя">
-                    <div class="contact-name">Бабушка Катя</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Максим')">
-                    <img src="https://i.ytimg.com/vi/e3j_Or1gKRY/maxresdefault.jpg" alt="Максим">
-                    <div class="contact-name">Дедушка Максим</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Анна')">
-                    <img src="https://avatars.mds.yandex.net/i?id=affcb975cf3475c699d98d1d198bbe25_l-5317467-images-thumbs&n=13" alt="Анна">
-                    <div class="contact-name">Анна</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Игорь')">
-                    <img src="https://yt3.googleusercontent.com/ytc/AIdro_lleLLrtUOQVFfdl6BLF8HkHWhkfgigVoxFRZ6AWfedbA=s900-c-k-c0x00ffffff-no-rj" alt="Игорь">
-                    <div class="contact-name">Игорь</div>
-                </div>
-                <div class="contact" onclick="confirmCall('Ольга')">
-                    <img src="https://avatars.mds.yandex.net/i?id=8c0e98c66bd923e5aa5505ed5eb97d16_l-5163220-images-thumbs&n=13" alt="Ольга">
-                    <div class="contact-name">Петр</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Экран подтверждения вызова -->
-        <div id="confirm-screen" class="screen">
-            <h1>Подтвердите вызов</h1>
-            <p>Хотите ли вы использовать устройство для передачи касаний?</p>
-            <button onclick="startCall(true)">Да</button>
-            <button onclick="startCall(false)">Нет</button>
-        </div>
-
-        <!-- Экран звонка -->
-        <div id="call-screen" class="screen">
-            <div id="video-area">
-                <video id="remote-video" autoplay></video>
-                <video id="local-video" autoplay muted></video>
-            </div>
-            <div class="controls">
-                <div class="control-button" id="end-call" onclick="endCall()">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
-                </div>
-                <div class="control-button" id="toggle-device" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Device">
-                </div>
-                <div class="control-button" id="toggle-mic" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Mic">
-                </div>
-                <div class="control-button" id="toggle-camera" onclick="toggleButton(this)">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-call.png" alt="Cam">
-                </div>
-            </div>
+            <h1>Добро пожаловать!</h1>
+            <button onclick="logout()">Выйти</button>
         </div>
     </div>
 
     <script>
-        function goToContacts() {
-            const password = document.getElementById("password").value;
-            if (!password) {
-                document.getElementById("error-message").style.display = "block";
+        function goToLogin() {
+            document.getElementById("question-screen").classList.remove("active");
+            document.getElementById("login-screen").classList.add("active");
+        }
+
+        function goToRegister() {
+            document.getElementById("question-screen").classList.remove("active");
+            document.getElementById("register-screen").classList.add("active");
+        }
+
+        function login() {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+
+            // Проверка на заполнение
+            if (!email || !password) {
+                document.getElementById("login-error").style.display = "block";
                 return;
             }
-            document.getElementById("error-message").style.display = "none";
+
+            document.getElementById("login-error").style.display = "none";
             document.getElementById("login-screen").classList.remove("active");
             document.getElementById("contacts-screen").classList.add("active");
         }
 
-        function confirmCall(contactName) {
-            document.getElementById("contacts-screen").classList.remove("active");
-            document.getElementById("confirm-screen").classList.add("active");
-            console.log("Выбранный контакт:", contactName);
-        }
+        function register() {
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
 
-        function startCall(useDevice) {
-            document.getElementById("confirm-screen").classList.remove("active");
-            document.getElementById("call-screen").classList.add("active");
-
-            if (!useDevice) {
-                document.getElementById("toggle-device").classList.add("off");
+            // Проверка пароля
+            if (!email || !password || password !== confirmPassword) {
+                document.getElementById("register-error").style.display = "block";
+                return;
             }
-        }
 
-        function endCall() {
-            document.getElementById("call-screen").classList.remove("active");
+            document.getElementById("register-error").style.display = "none";
+            alert("Регистрация прошла успешно! Теперь вы можете войти.");
+            document.getElementById("register-screen").classList.remove("active");
             document.getElementById("login-screen").classList.add("active");
         }
 
-        function toggleButton(button) {
-            button.classList.toggle("off");
+        function logout() {
+            document.getElementById("contacts-screen").classList.remove("active");
+            document.getElementById("question-screen").classList.add("active");
         }
     </script>
 </body>
