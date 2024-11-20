@@ -5,8 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Стильный Видео-звонок</title>
     <style>
-        /* Стиль остался без изменений */
-        /* Весь существующий CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
+        }
+
+        .back-button {
+            background: #ccc;
+            color: #333;
+        }
+
+        .back-button:hover {
+            background: #bbb;
+        }
     </style>
 </head>
 <body>
@@ -41,17 +108,29 @@
 
         <!-- Экран выбора контактов -->
         <div id="contacts-screen" class="screen">
-            <!-- Контакты, как в вашем коде -->
+            <h1>Выберите контакт</h1>
+            <div id="contacts-list">
+                <div class="contact" onclick="confirmCall('Катя')">
+                    <p>Катя</p>
+                </div>
+                <div class="contact" onclick="confirmCall('Максим')">
+                    <p>Максим</p>
+                </div>
+                <!-- Остальные контакты -->
+            </div>
         </div>
 
         <!-- Экран подтверждения вызова -->
         <div id="confirm-screen" class="screen">
-            <!-- Подтверждение вызова -->
+            <h1>Подтвердите вызов</h1>
+            <button onclick="startCall()">Да</button>
         </div>
 
         <!-- Экран звонка -->
         <div id="call-screen" class="screen">
-            <!-- Видеозвонок -->
+            <h1>Видеозвонок</h1>
+            <!-- Здесь будут кнопки управления вызовом -->
+            <button onclick="endCall()">Завершить звонок</button>
         </div>
     </div>
 
@@ -59,7 +138,14 @@
         // Переменные для хранения данных пользователей
         const users = [];
 
-        // Функции для перехода между экранами
+        // Переключение экранов
+        function setActiveScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
         function goToStart() {
             setActiveScreen('start-screen');
         }
@@ -72,14 +158,7 @@
             setActiveScreen('register-screen');
         }
 
-        function setActiveScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        // Логика регистрации
+        // Регистрация
         function register() {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
@@ -90,29 +169,34 @@
                 return;
             }
 
-            document.getElementById('register-error').style.display = 'none';
             users.push({ email, password });
-            alert('Регистрация успешна! Теперь войдите в систему.');
+            alert('Регистрация успешна! Теперь войдите.');
             goToLogin();
         }
 
-        // Логика входа
+        // Вход
         function login() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            const user = users.find(user => user.email === email && user.password === password);
-
-            if (!user) {
+            if (users.find(user => user.email === email && user.password === password)) {
+                setActiveScreen('contacts-screen');
+            } else {
                 document.getElementById('login-error').style.display = 'block';
-                return;
             }
-
-            document.getElementById('login-error').style.display = 'none';
-            goToContacts();
         }
 
-        function goToContacts() {
+        function confirmCall(contact) {
+            alert(`Вы выбрали контакт: ${contact}`);
+            setActiveScreen('confirm-screen');
+        }
+
+        function startCall() {
+            setActiveScreen('call-screen');
+        }
+
+        function endCall() {
+            alert('Звонок завершен');
             setActiveScreen('contacts-screen');
         }
     </script>
