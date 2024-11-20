@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Стильный Видео-звонок</title>
+    <title>Видеозвонок</title>
     <style>
         * {
             box-sizing: border-box;
@@ -41,163 +42,200 @@
             margin-bottom: 20px;
         }
 
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
+        .contacts-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
-        input {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-        }
-
-        button {
-            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
-            color: white;
+        .contact {
+            width: 80px;
+            margin: 10px;
+            text-align: center;
             cursor: pointer;
-            transition: background 0.3s;
         }
 
-        button:hover {
-            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
+        .contact img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
         }
 
-        .back-button {
-            background: #ccc;
-            color: #333;
+        .contact img:hover {
+            transform: scale(1.1);
         }
 
-        .back-button:hover {
-            background: #bbb;
+        .contact-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        #video-area {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #remote-video {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            background: url("https://via.placeholder.com/500x300") no-repeat center center;
+            background-size: cover;
+        }
+
+        #local-video {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 25%;
+            height: auto;
+            border: 2px solid white;
+            border-radius: 5px;
+            background: url("https://via.placeholder.com/100") no-repeat center center;
+            background-size: cover;
+        }
+
+        #local-video.off {
+            background-color: black;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .control-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #6b5b95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .control-button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .control-button.off {
+            background-color: red;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 500px) {
+            #app {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .contact {
+                width: 70px;
+            }
+
+            .control-button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .control-button img {
+                width: 25px;
+                height: 25px;
+            }
+
+            #remote-video {
+                height: 60vh;
+            }
+
+            #local-video {
+                width: 30%;
+            }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Экран выбора действия -->
-        <div id="start-screen" class="screen active">
-            <h1>Добро пожаловать!</h1>
-            <button onclick="goToLogin()">Вход</button>
-            <button onclick="goToRegister()">Регистрация</button>
-        </div>
-
-        <!-- Экран входа -->
-        <div id="login-screen" class="screen">
-            <h1>Вход</h1>
-            <input type="text" id="login-email" placeholder="Email">
-            <input type="password" id="login-password" placeholder="Пароль">
-            <button onclick="login()">Войти</button>
-            <button class="back-button" onclick="goToStart()">Назад</button>
-            <p id="login-error" style="color: red; display: none;">Неверный логин или пароль</p>
-        </div>
-
-        <!-- Экран регистрации -->
-        <div id="register-screen" class="screen">
-            <h1>Регистрация</h1>
-            <input type="text" id="register-email" placeholder="Email">
-            <input type="password" id="register-password" placeholder="Пароль">
-            <input type="password" id="confirm-password" placeholder="Повторите пароль">
-            <button onclick="register()">Зарегистрироваться</button>
-            <button class="back-button" onclick="goToStart()">Назад</button>
-            <p id="register-error" style="color: red; display: none;">Пароли не совпадают или поле пустое</p>
-        </div>
-
         <!-- Экран выбора контактов -->
-        <div id="contacts-screen" class="screen">
+        <div id="contacts-screen" class="screen active">
             <h1>Выберите контакт</h1>
-            <div id="contacts-list">
-                <div class="contact" onclick="confirmCall('Катя')">
-                    <p>Катя</p>
+            <div class="contacts-list">
+                <div class="contact" onclick="startCall('Катя')">
+                    <img src="https://via.placeholder.com/80/FFB6C1" alt="Катя">
+                    <div class="contact-name">Катя</div>
                 </div>
-                <div class="contact" onclick="confirmCall('Максим')">
-                    <p>Максим</p>
+                <div class="contact" onclick="startCall('Максим')">
+                    <img src="https://via.placeholder.com/80/87CEEB" alt="Максим">
+                    <div class="contact-name">Максим</div>
                 </div>
-                <!-- Остальные контакты -->
+                <div class="contact" onclick="startCall('Анна')">
+                    <img src="https://via.placeholder.com/80/90EE90" alt="Анна">
+                    <div class="contact-name">Анна</div>
+                </div>
+                <div class="contact" onclick="startCall('Игорь')">
+                    <img src="https://via.placeholder.com/80/FF69B4" alt="Игорь">
+                    <div class="contact-name">Игорь</div>
+                </div>
+                <div class="contact" onclick="startCall('Ольга')">
+                    <img src="https://via.placeholder.com/80/ADD8E6" alt="Ольга">
+                    <div class="contact-name">Ольга</div>
+                </div>
             </div>
-        </div>
-
-        <!-- Экран подтверждения вызова -->
-        <div id="confirm-screen" class="screen">
-            <h1>Подтвердите вызов</h1>
-            <button onclick="startCall()">Да</button>
         </div>
 
         <!-- Экран звонка -->
         <div id="call-screen" class="screen">
-            <h1>Видеозвонок</h1>
-            <!-- Здесь будут кнопки управления вызовом -->
-            <button onclick="endCall()">Завершить звонок</button>
+            <div id="video-area">
+                <video id="remote-video"></video>
+                <video id="local-video"></video>
+            </div>
+            <div class="controls">
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Mic">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-call.png" alt="Camera">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Device">
+                </div>
+                <div class="control-button" onclick="endCall()">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Переменные для хранения данных пользователей
-        const users = [];
-
-        // Переключение экранов
-        function setActiveScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
+        function startCall(contact) {
+            alert(`Начинается звонок с ${contact}`);
+            document.querySelector('.screen.active').classList.remove('active');
+            document.getElementById('call-screen').classList.add('active');
         }
 
-        function goToStart() {
-            setActiveScreen('start-screen');
-        }
-
-        function goToLogin() {
-            setActiveScreen('login-screen');
-        }
-
-        function goToRegister() {
-            setActiveScreen('register-screen');
-        }
-
-        // Регистрация
-        function register() {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (!email || !password || password !== confirmPassword) {
-                document.getElementById('register-error').style.display = 'block';
-                return;
-            }
-
-            users.push({ email, password });
-            alert('Регистрация успешна! Теперь войдите.');
-            goToLogin();
-        }
-
-        // Вход
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            if (users.find(user => user.email === email && user.password === password)) {
-                setActiveScreen('contacts-screen');
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
-        }
-
-        function confirmCall(contact) {
-            alert(`Вы выбрали контакт: ${contact}`);
-            setActiveScreen('confirm-screen');
-        }
-
-        function startCall() {
-            setActiveScreen('call-screen');
+        function toggleButton(button) {
+            button.classList.toggle('off');
         }
 
         function endCall() {
             alert('Звонок завершен');
-            setActiveScreen('contacts-screen');
+            document.querySelector('.screen.active').classList.remove('active');
+            document.getElementById('contacts-screen').classList.add('active');
         }
     </script>
 </body>
