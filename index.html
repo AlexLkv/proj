@@ -3,108 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remote Touch</title>
+    <title>Видеозвонок</title>
     <style>
-        /* Основные стили */
-        body {
-            font-family: Arial, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-        .container, .form, .contacts, .call {
-            display: none;
-            flex-direction: column;
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
         }
-        .container.active, .form.active, .contacts.active, .call.active {
-            display: flex;
+
+        #app {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
         }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
+
+        .screen {
+            display: none;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
             font-size: 16px;
         }
-        .contact img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+
+        input {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
         }
-        .controls button {
+
+        button {
+            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
+        }
+
+        .contacts-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact {
+            width: 80px;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .contact img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .contact img:hover {
+            transform: scale(1.1);
+        }
+
+        .contact-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        #video-area {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #remote-video {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            background: url("https://via.placeholder.com/500x300") no-repeat center center;
+            background-size: cover;
+        }
+
+        #local-video {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 25%;
+            height: auto;
+            border: 2px solid white;
+            border-radius: 5px;
+            background: url("https://via.placeholder.com/100") no-repeat center center;
+            background-size: cover;
+        }
+
+        #local-video.off {
+            background-color: black;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .control-button {
             width: 50px;
             height: 50px;
+            border-radius: 50%;
+            background-color: #6b5b95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .controls button.red {
-            background: red;
+
+        .control-button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .control-button.off {
+            background-color: red;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 500px) {
+            #app {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            .contact {
+                width: 70px;
+            }
+
+            .control-button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .control-button img {
+                width: 25px;
+                height: 25px;
+            }
+
+            #remote-video {
+                height: 60vh;
+            }
+
+            #local-video {
+                width: 30%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Выбор авторизации -->
-    <div id="auth" class="container active">
-        <h1>Remote Touch</h1>
-        <button onclick="showForm('login')">Вход</button>
-        <button onclick="showForm('register')">Регистрация</button>
-    </div>
-
-    <!-- Вход -->
-    <div id="loginForm" class="form">
-        <h2>Вход</h2>
-        <input type="text" placeholder="Логин или ID устройства">
-        <input type="password" placeholder="Пароль">
-        <button onclick="showContacts()">Войти</button>
-    </div>
-
-    <!-- Регистрация -->
-    <div id="registerForm" class="form">
-        <h2>Регистрация</h2>
-        <input type="email" placeholder="Email или ID устройства">
-        <input type="password" placeholder="Пароль">
-        <input type="password" placeholder="Повторите пароль">
-        <button onclick="showContacts()">Зарегистрироваться</button>
-    </div>
-
-    <!-- Контакты -->
-    <div id="contacts" class="contacts">
-        <h2>Контакты</h2>
-        <div class="contact" onclick="showCall()">
-            <img src="https://via.placeholder.com/100" alt="Контакт">
-            <p>Иван Иванов</p>
+    <div id="app">
+        <!-- Экран выбора авторизации -->
+        <div id="auth-choice-screen" class="screen active">
+            <h1>Добро пожаловать!</h1>
+            <button onclick="showScreen('login-screen')">Вход</button>
+            <button onclick="showScreen('register-screen')">Регистрация</button>
         </div>
-        <!-- Добавьте еще контакты здесь -->
-    </div>
 
-    <!-- Окно звонка -->
-    <div id="call" class="call">
-        <img src="https://via.placeholder.com/400" alt="Собеседник">
-        <div class="controls">
-            <button onclick="toggle(this)">🎤</button>
-            <button onclick="toggle(this)">📷</button>
-            <button onclick="endCall()">❌</button>
+        <!-- Экран входа -->
+        <div id="login-screen" class="screen">
+            <h1>Вход</h1>
+            <input type="text" id="login-id" placeholder="Логин или ID устройства">
+            <input type="password" id="login-password" placeholder="Пароль">
+            <button onclick="login()">Войти</button>
+        </div>
+
+        <!-- Экран регистрации -->
+        <div id="register-screen" class="screen">
+            <h1>Регистрация</h1>
+            <input type="text" id="register-email" placeholder="Почта или ID устройства">
+            <input type="password" id="register-password" placeholder="Пароль">
+            <input type="password" id="register-confirm-password" placeholder="Подтвердите пароль">
+            <button onclick="register()">Зарегистрироваться</button>
+        </div>
+
+        <!-- Экран выбора контактов -->
+        <div id="contacts-screen" class="screen">
+            <h1>Выберите контакт</h1>
+            <div class="contacts-list">
+                <div class="contact" onclick="confirmCall('Катя')">
+                    <img src="https://via.placeholder.com/80/FFB6C1" alt="Катя">
+                    <div class="contact-name">Катя</div>
+                </div>
+                <div class="contact" onclick="confirmCall('Максим')">
+                    <img src="https://via.placeholder.com/80/87CEEB" alt="Максим">
+                    <div class="contact-name">Максим</div>
+                </div>
+                <div class="contact" onclick="confirmCall('Анна')">
+                    <img src="https://via.placeholder.com/80/90EE90" alt="Анна">
+                    <div class="contact-name">Анна</div>
+                </div>
+                <div class="contact" onclick="confirmCall('Игорь')">
+                    <img src="https://via.placeholder.com/80/FF69B4" alt="Игорь">
+                    <div class="contact-name">Игорь</div>
+                </div>
+                <div class="contact" onclick="confirmCall('Ольга')">
+                    <img src="https://via.placeholder.com/80/ADD8E6" alt="Ольга">
+                    <div class="contact-name">Ольга</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран звонка -->
+        <div id="call-screen" class="screen">
+            <div id="video-area">
+                <video id="remote-video"></video>
+                <video id="local-video"></video>
+            </div>
+            <div class="controls">
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Mic">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-call.png" alt="Camera">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Device">
+                </div>
+                <div class="control-button" onclick="endCall()">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        function showForm(form) {
-            document.getElementById('auth').classList.remove('active');
-            document.getElementById(`${form}Form`).classList.add('active');
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
         }
-        function showContacts() {
-            document.querySelector('.form.active').classList.remove('active');
-            document.getElementById('contacts').classList.add('active');
+
+        function login() {
+            showScreen('contacts-screen');
         }
-        function showCall() {
-            document.getElementById('contacts').classList.remove('active');
-            document.getElementById('call').classList.add('active');
+
+        function register() {
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password === confirmPassword) {
+                showScreen('contacts-screen');
+            } else {
+                alert('Пароли не совпадают!');
+            }
         }
+
+        function confirmCall(contact) {
+            const useDevice = confirm(`Хотите использовать устройство для передачи касаний с ${contact}?`);
+            showScreen('call-screen');
+        }
+
+        function toggleButton(button) {
+            button.classList.toggle('off');
+        }
+
         function endCall() {
-            document.getElementById('call').classList.remove('active');
-            document.getElementById('contacts').classList.add('active');
-        }
-        function toggle(button) {
-            button.classList.toggle('red');
+            alert('Звонок завершен');
+            showScreen('contacts-screen');
         }
     </script>
 </body>
