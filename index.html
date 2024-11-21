@@ -44,7 +44,52 @@
             background-color: #5a4d7a;
         }
 
-        /* Страница звонка */
+        /* Меню контактов */
+        .contacts-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            gap: 20px;
+            position: relative;
+        }
+
+        .contact {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #6b5b95;
+        }
+
+        .contact span {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .add-contact {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px dashed #6b5b95;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #6b5b95;
+            font-size: 24px;
+        }
+
+        .add-contact:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Экран звонка */
         #call-screen {
             position: relative;
             width: 100%;
@@ -105,11 +150,85 @@
         .control-button:hover {
             background: #5a4d7a;
         }
+
+        /* Страница авторизации */
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form button {
+            padding: 10px;
+            background-color: #6b5b95;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form button:hover {
+            background-color: #5a4d7a;
+        }
     </style>
 </head>
 <body>
+    <!-- Экран авторизации -->
+    <div id="auth-screen" class="screen active">
+        <h1>Выберите способ авторизации</h1>
+        <button class="button" onclick="switchScreen('login-screen')">Вход</button>
+        <button class="button" onclick="switchScreen('register-screen')">Регистрация</button>
+    </div>
+
+    <!-- Экран входа -->
+    <div id="login-screen" class="screen">
+        <h1>Вход</h1>
+        <form class="form" onsubmit="handleLogin(event)">
+            <input type="email" placeholder="Введите почту" required>
+            <input type="password" placeholder="Введите пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+
+    <!-- Экран регистрации -->
+    <div id="register-screen" class="screen">
+        <h1>Регистрация</h1>
+        <form class="form" onsubmit="handleRegister(event)">
+            <input type="email" placeholder="Введите почту" required>
+            <input type="password" placeholder="Введите пароль" required>
+            <input type="password" placeholder="Повторите пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+
+    <!-- Меню контактов -->
+    <div id="contacts-screen" class="screen">
+        <h1>Ваши контакты</h1>
+        <div class="contacts-menu">
+            <div class="contact">
+                <img src="https://via.placeholder.com/80" alt="Контакт">
+                <span>Контакт 1</span>
+            </div>
+            <div class="contact">
+                <img src="https://via.placeholder.com/80" alt="Контакт">
+                <span>Контакт 2</span>
+            </div>
+            <div class="add-contact" onclick="addContact()">+</div>
+        </div>
+    </div>
+
     <!-- Экран звонка -->
-    <div id="call-screen" class="screen active">
+    <div id="call-screen" class="screen">
         <div id="local-video"></div>
         <div class="controls">
             <button class="control-button" id="mic-button" onclick="toggleControl('mic')">
@@ -128,6 +247,11 @@
     </div>
 
     <script>
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
         function toggleControl(control) {
             const button = document.getElementById(`${control}-button`);
             button.classList.toggle('off');
@@ -135,6 +259,11 @@
 
         function endCall() {
             alert('Звонок завершен.');
+            switchScreen('contacts-screen');
+        }
+
+        function addContact() {
+            alert('Добавление контакта пока недоступно.');
         }
     </script>
 </body>
