@@ -81,6 +81,11 @@
         .contact {
             text-align: center;
             margin: 10px;
+            cursor: pointer;
+            border: 1px solid #6b5b95;
+            border-radius: 50%;
+            padding: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .contact img {
@@ -90,6 +95,11 @@
             object-fit: cover;
         }
 
+        .contact:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
         .add-contact {
             display: flex;
             justify-content: center;
@@ -97,17 +107,20 @@
         }
 
         .add-contact button {
-            background-color: #6b5b95;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
+            background-color: #fff;
+            color: #6b5b95;
+            padding: 15px;
+            border: 2px dashed #6b5b95;
             border-radius: 50%;
             font-size: 20px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .add-contact button:hover {
-            background-color: #5a4d7a;
+            background-color: #f3f3f3;
         }
 
         #call-screen {
@@ -201,23 +214,23 @@
     <div id="contacts-screen" class="screen">
         <h1>Ваши контакты</h1>
         <div class="contacts" id="contacts-list">
-            <div class="contact">
+            <div class="contact" onclick="startCall('Иван')">
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Иван</p>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="startCall('Ольга')">
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Ольга</p>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="startCall('Петр')">
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Петр</p>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="startCall('Анна')">
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Анна</p>
             </div>
-            <div class="contact">
+            <div class="contact" onclick="startCall('Сергей')">
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Сергей</p>
             </div>
@@ -265,9 +278,15 @@
                 const contactList = document.getElementById('contacts-list');
                 const contact = document.createElement('div');
                 contact.className = 'contact';
+                contact.setAttribute('onclick', `startCall('${name}')`);
                 contact.innerHTML = `<img src="${img}" alt="Контакт"><p>${name}</p>`;
                 contactList.appendChild(contact);
             }
+        }
+
+        function startCall(contactName) {
+            alert(`Начинаем звонок с ${contactName}`);
+            showScreen('call-screen');
         }
 
         function endCall() {
