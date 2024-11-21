@@ -5,178 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Видеозвонок</title>
     <style>
-        /* Остальные стили из предыдущего кода остаются без изменений */
-        .add-contact {
-            width: 80px;
-            height: 80px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .screen {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: linear-gradient(45deg, #6b5b95, #b8a9c9);
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #5a4b85, #a8a0b9);
+        }
+
+        .contacts-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .contact, .add-contact {
             margin: 10px;
+            text-align: center;
+        }
+
+        .contact img, .add-contact {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .add-contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background-color: #f9f9f9;
+            color: #6b5b95;
             border: 2px dashed #6b5b95;
+        }
+
+        .add-contact:hover {
+            background-color: #ddd;
+        }
+
+        .video-area {
+            position: relative;
+            height: 80vh;
+            background-color: black;
+        }
+
+        #remote-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #local-video {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 25%;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background: #000;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .control-button {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            color: #6b5b95;
             cursor: pointer;
         }
 
-        .add-contact:hover {
-            background-color: #f9f9f9;
-            color: #333;
+        .control-button img {
+            width: 30px;
+            height: 30px;
         }
 
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: none;
+        .off {
+            background-color: red;
         }
 
-        .modal.active {
-            display: block;
-        }
+        @media (max-width: 500px) {
+            .contact img, .add-contact {
+                width: 70px;
+                height: 70px;
+            }
 
-        .modal input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+            .control-button {
+                width: 50px;
+                height: 50px;
+            }
 
-        .modal button {
-            width: 100%;
-            padding: 10px;
-            background-color: #6b5b95;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
+            .control-button img {
+                width: 25px;
+                height: 25px;
+            }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Остальные экраны остаются прежними -->
+        <!-- Выбор авторизации -->
+        <div id="auth-screen" class="screen active">
+            <h1>Добро пожаловать</h1>
+            <button onclick="showScreen('login-screen')">Вход</button>
+            <button onclick="showScreen('register-screen')">Регистрация</button>
+        </div>
 
-        <!-- Экран выбора контактов -->
+        <!-- Вход -->
+        <div id="login-screen" class="screen">
+            <h1>Вход</h1>
+            <input type="text" placeholder="Логин или ID устройства">
+            <input type="password" placeholder="Пароль">
+            <button onclick="showScreen('contacts-screen')">Войти</button>
+        </div>
+
+        <!-- Регистрация -->
+        <div id="register-screen" class="screen">
+            <h1>Регистрация</h1>
+            <input type="text" placeholder="Email или ID устройства">
+            <input type="password" placeholder="Пароль">
+            <input type="password" placeholder="Повторите пароль">
+            <button onclick="showScreen('contacts-screen')">Зарегистрироваться</button>
+        </div>
+
+        <!-- Контакты -->
         <div id="contacts-screen" class="screen">
             <h1>Выберите контакт</h1>
             <div class="contacts-list" id="contacts-list">
                 <div class="contact" onclick="confirmCall('Катя')">
-                    <img src="https://via.placeholder.com/80/FFB6C1" alt="Катя">
-                    <div class="contact-name">Катя</div>
+                    <img src="https://via.placeholder.com/90/FFB6C1" alt="Катя">
+                    <div>Катя</div>
                 </div>
                 <div class="contact" onclick="confirmCall('Максим')">
-                    <img src="https://via.placeholder.com/80/87CEEB" alt="Максим">
-                    <div class="contact-name">Максим</div>
+                    <img src="https://via.placeholder.com/90/87CEEB" alt="Максим">
+                    <div>Максим</div>
                 </div>
                 <div class="contact" onclick="confirmCall('Анна')">
-                    <img src="https://via.placeholder.com/80/90EE90" alt="Анна">
-                    <div class="contact-name">Анна</div>
+                    <img src="https://via.placeholder.com/90/90EE90" alt="Анна">
+                    <div>Анна</div>
                 </div>
                 <div class="contact" onclick="confirmCall('Игорь')">
-                    <img src="https://via.placeholder.com/80/FF69B4" alt="Игорь">
-                    <div class="contact-name">Игорь</div>
+                    <img src="https://via.placeholder.com/90/FF69B4" alt="Игорь">
+                    <div>Игорь</div>
                 </div>
                 <div class="contact" onclick="confirmCall('Ольга')">
-                    <img src="https://via.placeholder.com/80/ADD8E6" alt="Ольга">
-                    <div class="contact-name">Ольга</div>
+                    <img src="https://via.placeholder.com/90/ADD8E6" alt="Ольга">
+                    <div>Ольга</div>
                 </div>
-                <div class="add-contact" onclick="openAddContactModal()">+</div>
+                <div class="add-contact" onclick="addContact()">+</div>
             </div>
         </div>
 
-        <!-- Модальное окно для добавления контакта -->
-        <div class="overlay" id="overlay" onclick="closeAddContactModal()"></div>
-        <div class="modal" id="add-contact-modal">
-            <h2>Добавить контакт</h2>
-            <input type="text" id="new-contact-name" placeholder="Имя контакта">
-            <input type="url" id="new-contact-image" placeholder="Ссылка на изображение">
-            <button onclick="addContact()">Добавить</button>
+        <!-- Видеозвонок -->
+        <div id="call-screen" class="screen">
+            <div class="video-area">
+                <video id="remote-video"></video>
+                <video id="local-video"></video>
+            </div>
+            <div class="controls">
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="End Call">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Microphone">
+                </div>
+                <div class="control-button" onclick="toggleButton(this)">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/video-call.png" alt="Camera">
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Показать модальное окно
-        function openAddContactModal() {
-            document.getElementById('overlay').classList.add('active');
-            document.getElementById('add-contact-modal').classList.add('active');
-        }
-
-        // Закрыть модальное окно
-        function closeAddContactModal() {
-            document.getElementById('overlay').classList.remove('active');
-            document.getElementById('add-contact-modal').classList.remove('active');
-        }
-
-        // Добавить новый контакт
-        function addContact() {
-            const name = document.getElementById('new-contact-name').value;
-            const image = document.getElementById('new-contact-image').value;
-
-            if (name && image) {
-                const contactsList = document.getElementById('contacts-list');
-                const newContact = document.createElement('div');
-                newContact.classList.add('contact');
-                newContact.onclick = () => confirmCall(name);
-
-                newContact.innerHTML = `
-                    <img src="${image}" alt="${name}">
-                    <div class="contact-name">${name}</div>
-                `;
-
-                // Добавить контакт перед кнопкой "+"
-                contactsList.insertBefore(newContact, contactsList.lastElementChild);
-
-                // Очистить форму и закрыть модальное окно
-                document.getElementById('new-contact-name').value = '';
-                document.getElementById('new-contact-image').value = '';
-                closeAddContactModal();
-            } else {
-                alert('Пожалуйста, заполните все поля!');
-            }
-        }
-
-        // Остальной JavaScript из предыдущего кода
-        function confirmCall(contact) {
-            const useDevice = confirm(`Хотите использовать устройство для передачи касаний с ${contact}?`);
-            showScreen('call-screen');
-        }
-
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+        }
+
+        function confirmCall(contact) {
+            const useDevice = confirm(`Использовать устройство для передачи касаний с ${contact}?`);
+            showScreen('call-screen');
         }
 
         function toggleButton(button) {
             button.classList.toggle('off');
         }
 
-        function endCall() {
-            alert('Звонок завершен');
-            showScreen('contacts-screen');
+        function addContact() {
+            alert('Функция добавления нового контакта будет реализована.');
         }
     </script>
 </body>
