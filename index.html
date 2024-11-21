@@ -182,6 +182,7 @@
         .control-button.off {
             background: red;
         }
+
     </style>
 </head>
 <body>
@@ -251,16 +252,16 @@
             </div>
             <div class="controls">
                 <div class="control-button" id="mic-button" onclick="toggleControl('mic')">
-                    <img src="https://via.placeholder.com/24?text=Mic" alt="Микрофон">
+                    <img src="https://img.icons8.com/ios/50/000000/microphone.png" alt="Микрофон">
                 </div>
                 <div class="control-button" id="camera-button" onclick="toggleControl('camera')">
-                    <img src="https://via.placeholder.com/24?text=Cam" alt="Камера">
+                    <img src="https://img.icons8.com/ios/50/000000/video-camera.png" alt="Камера">
                 </div>
                 <div class="control-button" id="touch-button" onclick="toggleControl('touch')">
-                    <img src="https://via.placeholder.com/24?text=Touch" alt="Передача касаний">
+                    <img src="https://img.icons8.com/ios/50/000000/hand.png" alt="Передача касаний">
                 </div>
                 <div class="control-button" id="end-call-button" onclick="endCall()">
-                    <img src="https://via.placeholder.com/24?text=End" alt="Сбросить звонок">
+                    <img src="https://img.icons8.com/ios/50/000000/end-call.png" alt="Сбросить звонок">
                 </div>
             </div>
         </div>
@@ -275,7 +276,7 @@
         }
 
         function startCall(contactName) {
-            let useTouch = confirm(`Хотите использовать устройство для передачи касаний с ${contactName}?`);
+            const useTouch = confirm(`Вы хотите использовать устройство для передачи касаний с ${contactName}?`);
             if (useTouch) {
                 showScreen('call-screen');
             } else {
