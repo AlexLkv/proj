@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финальная версия сайта</title>
+    <title>Исправленный сайт</title>
     <style>
         body {
             margin: 0;
@@ -28,135 +28,45 @@
             margin-bottom: 20px;
         }
 
-        .button {
-            padding: 10px 20px;
-            background-color: #6b5b95;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            margin: 10px;
-            border: none;
-        }
-
-        .button:hover {
-            background-color: #5a4d7a;
-        }
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form input {
-            margin: 10px;
-            padding: 10px;
-            width: 220px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form button {
-            padding: 10px 20px;
-            background-color: #6b5b95;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .form button:hover {
-            background-color: #5a4d7a;
-        }
-
-        .contacts {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 10px;
-        }
-
-        .contact {
-            text-align: center;
-            margin: 10px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .contact img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #6b5b95;
-        }
-
-        .add-contact {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .add-contact button {
-            background-color: #fff;
-            color: #6b5b95;
-            padding: 15px;
-            border: 2px dashed #6b5b95;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 70px;
-            height: 70px;
-        }
-
-        .add-contact button:hover {
-            background-color: #f3f3f3;
-        }
-
         #call-screen {
             position: relative;
             width: 100%;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background-color: black;
         }
 
         #remote-video {
-            flex: 1;
+            width: 100%;
+            height: 100%;
             background: url("https://via.placeholder.com/800x600") no-repeat center center;
             background-size: cover;
-            position: relative;
         }
 
         #local-video {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            width: 25%;
-            max-width: 120px;
-            aspect-ratio: 16/9;
-            border: 2px solid white;
-            border-radius: 8px;
-            background: url("https://via.placeholder.com/200x150") no-repeat center center;
+            width: 100px;
+            height: 100px;
+            background: url("https://via.placeholder.com/150x150") no-repeat center center;
             background-size: cover;
+            border: 2px solid white;
+            border-radius: 10px;
         }
 
         .controls {
-            background: #fff;
-            padding: 10px;
+            position: absolute;
+            bottom: 100px;
+            width: 100%;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-evenly;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 0;
         }
 
         .control-button {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: #6b5b95;
             display: flex;
@@ -164,118 +74,53 @@
             justify-content: center;
             cursor: pointer;
             transition: background 0.3s;
+            border: none;
         }
 
         .control-button img {
-            width: 24px;
-            height: 24px;
+            width: 40px;
+            height: 40px;
         }
 
         .control-button.off {
             background: red;
         }
+
+        .control-button:hover {
+            background: #5a4d7a;
+        }
     </style>
 </head>
 <body>
-    <!-- Экран выбора авторизации -->
-    <div id="auth-screen" class="screen active">
-        <h1>Выберите способ авторизации</h1>
-        <button class="button" onclick="showScreen('login-screen')">Вход</button>
-        <button class="button" onclick="showScreen('register-screen')">Регистрация</button>
-    </div>
-
-    <!-- Экран входа -->
-    <div id="login-screen" class="screen">
-        <h1>Вход</h1>
-        <form class="form">
-            <input type="text" placeholder="Почта или ID устройства">
-            <input type="password" placeholder="Пароль">
-            <button type="button" onclick="showScreen('contacts-screen')">Войти</button>
-        </form>
-    </div>
-
-    <!-- Экран регистрации -->
-    <div id="register-screen" class="screen">
-        <h1>Регистрация</h1>
-        <form class="form">
-            <input type="email" placeholder="Почта или ID устройства">
-            <input type="password" placeholder="Пароль">
-            <input type="password" placeholder="Повторите пароль">
-            <button type="button" onclick="showScreen('contacts-screen')">Зарегистрироваться</button>
-        </form>
-    </div>
-
-    <!-- Экран контактов -->
-    <div id="contacts-screen" class="screen">
-        <h1>Ваши контакты</h1>
-        <div class="contacts" id="contacts-list">
-            <div class="contact" onclick="startCall('Иван')">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Иван</p>
-            </div>
-            <div class="contact" onclick="startCall('Ольга')">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Ольга</p>
-            </div>
-        </div>
-        <div class="add-contact">
-            <button onclick="addContact()">+</button>
-        </div>
-    </div>
-
     <!-- Экран звонка -->
-    <div id="call-screen" class="screen">
-        <div id="remote-video">
-            <div id="local-video"></div>
-        </div>
+    <div id="call-screen" class="screen active">
+        <div id="remote-video"></div>
+        <div id="local-video"></div>
         <div class="controls">
-            <div class="control-button" id="mic-button" onclick="toggleControl('mic')">
-                <img src="https://via.placeholder.com/24?text=Mic" alt="Микрофон">
-            </div>
-            <div class="control-button" id="camera-button" onclick="toggleControl('camera')">
-                <img src="https://via.placeholder.com/24?text=Cam" alt="Камера">
-            </div>
-            <div class="control-button" id="touch-button" onclick="toggleControl('touch')">
-                <img src="https://via.placeholder.com/24?text=Touch" alt="Передача касаний">
-            </div>
-            <div class="control-button" id="end-call-button" onclick="endCall()">
-                <img src="https://via.placeholder.com/24?text=End" alt="Сбросить звонок">
-            </div>
+            <button class="control-button" id="mic-button" onclick="toggleControl('mic')">
+                <img src="https://via.placeholder.com/40?text=Mic" alt="Микрофон">
+            </button>
+            <button class="control-button" id="camera-button" onclick="toggleControl('camera')">
+                <img src="https://via.placeholder.com/40?text=Cam" alt="Камера">
+            </button>
+            <button class="control-button" id="touch-button" onclick="toggleControl('touch')">
+                <img src="https://via.placeholder.com/40?text=Touch" alt="Передача касаний">
+            </button>
+            <button class="control-button" id="end-call-button" onclick="endCall()">
+                <img src="https://via.placeholder.com/40?text=End" alt="Сбросить звонок">
+            </button>
         </div>
     </div>
 
     <script>
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
         function toggleControl(control) {
-            document.getElementById(`${control}-button`).classList.toggle('off');
-        }
-
-        function addContact() {
-            const login = prompt('Введите логин контакта:');
-            const name = prompt('Введите имя контакта:');
-            const img = prompt('Введите URL изображения контакта:');
-            if (login && name && img) {
-                const contactList = document.getElementById('contacts-list');
-                const contact = document.createElement('div');
-                contact.className = 'contact';
-                contact.setAttribute('onclick', `startCall('${name}')`);
-                contact.innerHTML = `<img src="${img}" alt="Контакт"><p>${name}</p>`;
-                contactList.appendChild(contact);
-            }
-        }
-
-        function startCall(contactName) {
-            alert(`Начинаем звонок с ${contactName}`);
-            showScreen('call-screen');
+            const button = document.getElementById(`${control}-button`);
+            button.classList.toggle('off');
         }
 
         function endCall() {
             alert('Звонок завершен.');
-            showScreen('contacts-screen');
+            // Вернуться к экрану контактов или на другую страницу
         }
     </script>
 </body>
