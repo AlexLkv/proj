@@ -82,10 +82,7 @@
             text-align: center;
             margin: 10px;
             cursor: pointer;
-            border: 1px solid #6b5b95;
-            border-radius: 50%;
-            padding: 5px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
         }
 
         .contact img {
@@ -93,11 +90,7 @@
             height: 70px;
             border-radius: 50%;
             object-fit: cover;
-        }
-
-        .contact:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid #6b5b95;
         }
 
         .add-contact {
@@ -117,6 +110,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 70px;
+            height: 70px;
         }
 
         .add-contact button:hover {
@@ -222,18 +217,6 @@
                 <img src="https://via.placeholder.com/70" alt="Контакт">
                 <p>Ольга</p>
             </div>
-            <div class="contact" onclick="startCall('Петр')">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Петр</p>
-            </div>
-            <div class="contact" onclick="startCall('Анна')">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Анна</p>
-            </div>
-            <div class="contact" onclick="startCall('Сергей')">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Сергей</p>
-            </div>
         </div>
         <div class="add-contact">
             <button onclick="addContact()">+</button>
@@ -272,9 +255,10 @@
         }
 
         function addContact() {
+            const login = prompt('Введите логин контакта:');
             const name = prompt('Введите имя контакта:');
             const img = prompt('Введите URL изображения контакта:');
-            if (name && img) {
+            if (login && name && img) {
                 const contactList = document.getElementById('contacts-list');
                 const contact = document.createElement('div');
                 contact.className = 'contact';
