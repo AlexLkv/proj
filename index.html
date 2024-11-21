@@ -1,81 +1,65 @@
+Вот полная версия сайта с описанным функционалом:
 
+### Полный HTML-код
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Финальная версия сайта</title>
+    <title>Видеозвонки</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-        }
-
-        /* Главный экран */
-        .screen {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             background-color: #f0f0f0;
         }
 
-        .screen.active {
-            display: flex;
+        /* Общий стиль для страниц */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
-        /* Кнопки */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #6b5b95;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .center {
             text-align: center;
         }
 
-        .button:hover {
-            background-color: #5a4d7a;
-        }
-
-        /* Форма авторизации */
-        .form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form input {
-            margin: 10px;
+        .button {
+            display: block;
+            width: 100%;
             padding: 10px;
-            width: 200px;
+            margin: 10px 0;
+            background: #6b5b95;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #563d7c;
+        }
+
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .form button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #6b5b95;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .form button:hover {
-            background-color: #5a4d7a;
-        }
-
-        /* Контакты */
+        /* Список контактов */
         .contacts {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
-            padding: 10px;
+            justify-content: center;
         }
 
         .contact {
@@ -84,30 +68,26 @@
         }
 
         .contact img {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            object-fit: cover;
+            border: 2px solid #6b5b95;
         }
 
         .add-contact {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        .add-contact button {
-            background-color: #6b5b95;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            font-size: 20px;
+            background: #6b5b95;
+            color: white;
+            font-size: 30px;
+            line-height: 60px;
+            text-align: center;
             cursor: pointer;
         }
 
-        .add-contact button:hover {
-            background-color: #5a4d7a;
+        .add-contact:hover {
+            background: #563d7c;
         }
 
         /* Окно звонка */
@@ -115,7 +95,7 @@
             position: relative;
             width: 100%;
             height: 100vh;
-            overflow: hidden;
+            background: #000;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -139,6 +119,7 @@
             border-radius: 8px;
             background: url("https://via.placeholder.com/200x150") no-repeat center center;
             background-size: cover;
+            z-index: 10;
         }
 
         .controls {
@@ -146,6 +127,7 @@
             padding: 10px;
             display: flex;
             justify-content: space-around;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .control-button {
@@ -171,64 +153,62 @@
     </style>
 </head>
 <body>
-    <!-- Экран выбора авторизации -->
-    <div id="auth-screen" class="screen active">
-        <div>
-            <a class="button" onclick="showScreen('login-screen')">Вход</a>
-            <a class="button" onclick="showScreen('register-screen')">Регистрация</a>
-        </div>
+    <!-- Первая страница -->
+    <div class="container center" id="auth-screen">
+        <h1>Добро пожаловать</h1>
+        <button class="button" onclick="showLogin()">Вход</button>
+        <button class="button" onclick="showRegister()">Регистрация</button>
     </div>
 
-    <!-- Экран входа -->
-    <div id="login-screen" class="screen">
-        <form class="form">
-            <input type="text" placeholder="Логин или ID устройства">
-            <input type="password" placeholder="Пароль">
-            <button type="button" onclick="showScreen('contacts-screen')">Войти</button>
-        </form>
+    <!-- Страница входа -->
+    <div class="container" id="login-screen" style="display: none;">
+        <h2>Вход</h2>
+        <input type="text" placeholder="Логин или ID устройства">
+        <input type="password" placeholder="Пароль">
+        <button class="button" onclick="showContacts()">Войти</button>
     </div>
 
-    <!-- Экран регистрации -->
-    <div id="register-screen" class="screen">
-        <form class="form">
-            <input type="email" placeholder="Почта или ID устройства">
-            <input type="password" placeholder="Пароль">
-            <input type="password" placeholder="Повторите пароль">
-            <button type="button" onclick="showScreen('contacts-screen')">Зарегистрироваться</button>
-        </form>
+    <!-- Страница регистрации -->
+    <div class="container" id="register-screen" style="display: none;">
+        <h2>Регистрация</h2>
+        <input type="email" placeholder="Почта или ID устройства">
+        <input type="password" placeholder="Пароль">
+        <input type="password" placeholder="Повторите пароль">
+        <button class="button" onclick="showContacts()">Зарегистрироваться</button>
     </div>
 
-    <!-- Экран контактов -->
-    <div id="contacts-screen" class="screen">
+    <!-- Меню контактов -->
+    <div class="container" id="contacts-screen" style="display: none;">
+        <h2>Контакты</h2>
         <div class="contacts">
-            <div class="contact">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Иван</p>
+            <div class="contact" onclick="confirmCall()">
+                <img src="https://via.placeholder.com/60" alt="Контакт 1">
+                <p>Алексей</p>
             </div>
-            <div class="contact">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
+            <div class="contact" onclick="confirmCall()">
+                <img src="https://via.placeholder.com/60" alt="Контакт 2">
+                <p>Мария</p>
+            </div>
+            <div class="contact" onclick="confirmCall()">
+                <img src="https://via.placeholder.com/60" alt="Контакт 3">
+                <p>Дмитрий</p>
+            </div>
+            <div class="contact" onclick="confirmCall()">
+                <img src="https://via.placeholder.com/60" alt="Контакт 4">
+                <p>Ирина</p>
+            </div>
+            <div class="contact" onclick="confirmCall()">
+                <img src="https://via.placeholder.com/60" alt="Контакт 5">
                 <p>Ольга</p>
             </div>
             <div class="contact">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Петр</p>
+                <div class="add-contact" onclick="alert('Добавление нового контакта')">+</div>
             </div>
-            <div class="contact">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Анна</p>
-            </div>
-            <div class="contact">
-                <img src="https://via.placeholder.com/70" alt="Контакт">
-                <p>Сергей</p>
-            </div>
-        </div>
-        <div class="add-contact">
-            <button onclick="alert('Добавить контакт')">+</button>
         </div>
     </div>
 
-    <!-- Экран звонка -->
-    <div id="call-screen" class="screen">
+    <!-- Окно звонка -->
+    <div id="call-screen" style="display: none;">
         <div id="remote-video">
             <div id="local-video"></div>
         </div>
@@ -242,21 +222,59 @@
             <div class="control-button" id="vibration-button" onclick="toggleControl('vibration')">
                 <img src="https://via.placeholder.com/24?text=Vib" alt="Вибрация">
             </div>
-            <div class="control-button" id="end-call-button" onclick="alert('Звонок завершен')">
+            <div class="control-button" id="end-call-button" onclick="endCall()">
                 <img src="https://via.placeholder.com/24?text=End" alt="Сбросить звонок">
             </div>
         </div>
     </div>
 
     <script>
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+        function showLogin() {
+            document.getElementById("auth-screen").style.display = "none";
+            document.getElementById("login-screen").style.display = "block";
+        }
+
+        function showRegister() {
+            document.getElementById("auth-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "block";
+        }
+
+        function showContacts() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("register-screen").style.display = "none";
+            document.getElementById("contacts-screen").style.display = "block";
+        }
+
+        function confirmCall() {
+            if (confirm("Использовать устройство для передачи касаний?")) {
+                showCallScreen();
+            }
+        }
+
+        function showCallScreen() {
+            document.getElementById("contacts-screen").style.display = "none";
+            document.getElementById("call-screen").style.display = "flex";
         }
 
         function toggleControl(control) {
-            document.getElementById(`${control}-button`).classList.toggle('off');
+            const button = document.getElementById(`${control}-button`);
+            button.classList.toggle("off");
+        }
+
+        function endCall() {
+            alert("Звонок завершен.");
+            document.getElementById("call-screen").style.display = "none";
+            document.getElementById("contacts-screen").style.display = "block";
         }
     </script>
 </body>
 </html>
+``` 
+
+### Особенности:
+- Полная структура сайта с функциональными
+
+ страницами.
+- Поддержка мобильного интерфейса.
+- Вызов подтверждения для устройства касаний. 
+- Полностью реализовано окно звонка.
