@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Исправленный сайт</title>
+    <title>Финальная версия сайта</title>
     <style>
         body {
             margin: 0;
@@ -28,16 +28,30 @@
             margin-bottom: 20px;
         }
 
+        .button {
+            padding: 10px 20px;
+            background-color: #6b5b95;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin: 10px;
+            border: none;
+        }
+
+        .button:hover {
+            background-color: #5a4d7a;
+        }
+
+        /* Страница звонка */
         #call-screen {
             position: relative;
             width: 100%;
             height: 100vh;
-            background-color: black;
-        }
-
-        #remote-video {
-            width: 100%;
-            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             background: url("https://via.placeholder.com/800x600") no-repeat center center;
             background-size: cover;
         }
@@ -46,22 +60,24 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            width: 100px;
-            height: 100px;
-            background: url("https://via.placeholder.com/150x150") no-repeat center center;
+            width: 90px;
+            height: 90px;
+            border: 3px solid white;
+            border-radius: 50%;
+            background: url("https://via.placeholder.com/100x100") no-repeat center center;
             background-size: cover;
-            border: 2px solid white;
-            border-radius: 10px;
         }
 
         .controls {
-            position: absolute;
-            bottom: 100px;
-            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
             display: flex;
-            justify-content: space-evenly;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 0;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
         }
 
         .control-button {
@@ -78,8 +94,8 @@
         }
 
         .control-button img {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
         }
 
         .control-button.off {
@@ -93,21 +109,20 @@
 </head>
 <body>
     <!-- Экран звонка -->
-    <div id="call-screen" class="screen active">
-        <div id="remote-video"></div>
+    <div id="call-screen" class="screen">
         <div id="local-video"></div>
         <div class="controls">
             <button class="control-button" id="mic-button" onclick="toggleControl('mic')">
-                <img src="https://via.placeholder.com/40?text=Mic" alt="Микрофон">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/microphone.png" alt="Микрофон">
             </button>
             <button class="control-button" id="camera-button" onclick="toggleControl('camera')">
-                <img src="https://via.placeholder.com/40?text=Cam" alt="Камера">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/camera.png" alt="Камера">
             </button>
             <button class="control-button" id="touch-button" onclick="toggleControl('touch')">
-                <img src="https://via.placeholder.com/40?text=Touch" alt="Передача касаний">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/hand.png" alt="Передача касаний">
             </button>
             <button class="control-button" id="end-call-button" onclick="endCall()">
-                <img src="https://via.placeholder.com/40?text=End" alt="Сбросить звонок">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/end-call.png" alt="Сбросить звонок">
             </button>
         </div>
     </div>
@@ -120,7 +135,6 @@
 
         function endCall() {
             alert('Звонок завершен.');
-            // Вернуться к экрану контактов или на другую страницу
         }
     </script>
 </body>
